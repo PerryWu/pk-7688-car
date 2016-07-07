@@ -46,6 +46,7 @@ app.get('/', function(req, res) {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/control', carControl.control);
+app.get('/json', carControl.json);
 
 // development only
 if ('development' == process.env.ENV) {

@@ -1,4 +1,4 @@
-
+var os = require(os);
 var SerialPort = require("serialport").SerialPort;
 var serialPort = new SerialPort("/dev/ttyS0", {
     baudrate: 57600
@@ -68,11 +68,25 @@ function httpControl(req, res) {
     });
 }
 
-
 function httpJson(req, res) {
+    var info = os.networkInterfaces();
+    if (!info['apcli0']) {
+        return res.json({
+            status: 'error',
+            messages: 'interface error!?'
+        });
+    }
+    var ip, mac;
+    for(var i in info['apcli0']) {
+        var inf = info['apcli0'][i];
+        if(inf.family == 'IPv4') {
+            ip = inf.address;
+            mac = inf.mac;
+        }
+    }
     return res.json({
         status: 'done',
-        messages: 'good'
+        messages: {ip: ip, mac: mac, name: 'car-7688'};
     });
 }
 
