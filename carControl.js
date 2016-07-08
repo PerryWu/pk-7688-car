@@ -11,7 +11,7 @@ var carControl = module.exports = {
 
 var stopTimer;
 var servoStopTimer;
-var delayTo = 1000; // milllseconds
+var delayTo = 500; // milllseconds
 
 function carStop() {
     serialPort.write('st');
@@ -51,7 +51,10 @@ function httpControl(req, res) {
             if(stopTimer) {
                 clearTimeout(stopTimer);
             }
-            stopTimer = setTimeout(carStop, delayTo);
+            if(action == 'right' || action == 'left')
+                stopTimer = setTimeout(carStop, delayTo/2);
+            else
+                stopTimer = setTimeout(carStop, delayTo);
             break;
         case 'camera':
             switch (action) {
@@ -111,7 +114,8 @@ function httpJson(req, res) {
 
 function cameraon() {
     var exec = require('child_process').exec;
-    var cmd = exec('mjpg_streamer -i "input_uvc.so -r 1280*960 -d /dev/video0" -o "output_http.so -n -p 46666"');
+    //var cmd = exec('mjpg_streamer -i "input_uvc.so -r 1280*960 -d /dev/video0" -o "output_http.so -n -p 46666"');
+    var cmd = exec('mjpg_streamer -i "input_uvc.so -r 640*480 -d /dev/video0" -o "output_http.so -n -p 46666"');
 
     cmd.stdout.on('data', function(data) {
         console.log('stdout: ' + data);
