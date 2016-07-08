@@ -10,6 +10,7 @@ var carControl = module.exports = {
 }
 
 var stopTimer;
+var servoStopTimer;
 var delayTo = 1000; // milllseconds
 
 function carStop() {
@@ -63,14 +64,21 @@ function httpControl(req, res) {
             }
             break;
         case 'servo':
+            var target;
             switch (action) {
                 case '0':
-                    serialPort.write("sa" + req.query.to);
+                    target='sa';
                     break;
                 case '1':
-                    serialPort.write("sb" + req.query.to);
+                    target='sb';
                     break;
             }
+            serialPort.write(target + req.query.to);
+	    if(servoStopTimer) {
+        	clearTimeout(servoStopTimer);
+            }
+            servoStopTimer = setTimeout(servoStop, delayTo);
+            break;
     }
 
     return res.json({
@@ -130,3 +138,5 @@ function cameraoff() {
         console.log('closing code: ' + code);
     });
 }
+
+cameraon();

@@ -30,6 +30,14 @@
                     <button type="button" class="4 col-xs-4 glyphicon glyphicon-arrow-right btn-info btn-lg"></button>
                 </div>
             </div>
+            <div class="well">
+                <div class="row">
+                    <button type="button" class="sl col-xs-3 glyphicon glyphicon-arrow-left btn-info btn-lg"></button>
+                    <button type="button" class="sd col-xs-3 glyphicon glyphicon-arrow-down btn-success btn-lg"></button>
+                    <button type="button" class="su col-xs-3 glyphicon glyphicon-arrow-up btn-success btn-lg"></button>
+                    <button type="button" class="sr col-xs-3 glyphicon glyphicon-arrow-right btn-info btn-lg"></button>
+                </div>
+            </div>
         </div>
     </div>
     </div>
@@ -47,8 +55,7 @@
         {
             $.ajax(
             {
-                url: "control?cmd=stop",
-                success: function(result) {}
+                url: "control?cmd=car&action=stop",
             });
         };
 
@@ -56,8 +63,7 @@
         {
             $.ajax(
             {
-                url: "control?cmd=forward",
-                success: function(result) {}
+                url: "control?cmd=car&action=forward",
             });
         };
 
@@ -65,8 +71,7 @@
         {
             $.ajax(
             {
-                url: "control?cmd=back",
-                success: function(result) {}
+                url: "control?cmd=car&action=back",
             });
         };
 
@@ -74,8 +79,7 @@
         {
             $.ajax(
             {
-                url: "control?cmd=left",
-                success: function(result) {}
+                url: "control?cmd=car&action=left",
             });
         };
 
@@ -83,8 +87,7 @@
         {
             $.ajax(
             {
-                url: "control?cmd=right",
-                success: function(result) {}
+                url: "control?cmd=car&action=right",
             });
         };
 
@@ -93,7 +96,6 @@
             $.ajax(
             {
                 url: "control?cmd=camera&action=on",
-                success: function(result) {}
             });
         };
 
@@ -102,29 +104,44 @@
             $.ajax(
             {
                 url: "control?cmd=camera&action=off",
-                success: function(result) {}
             });
         };
 
 
-        $(".0").on('click', (function() {
+        $(".0").on('click', function() {
             get0();
         });
 
-        $(".1").on('click', (function() {
+        $(".1").on('click', function() {
             get1();
         });
 
-        $(".2").on('click', (function() {
+        $(".2").on('click', function() {
             get2();
         });
 
-        $(".3").on('click', (function() {
+        $(".3").on('click', function() {
             get3();
         });
 
-        $(".4").on('click', (function() {
+        $(".4").on('click', function() {
             get4();
+        });
+
+        $(".sl").on('click', function() {
+            $.ajax({url:"control?cmd=servo&action=0&to=f"})
+        });
+
+        $(".sr").on('click', function() {
+            $.ajax({url:"control?cmd=servo&action=0&to=b"})
+        });
+
+        $(".su").on('click', function() {
+            $.ajax({url:"control?cmd=servo&action=1&to=b"})
+        });
+
+        $(".sd").on('click', function() {
+            $.ajax({url:"control?cmd=servo&action=1&to=f"})
         });
 
         $(".cameraon").click(function()
@@ -142,7 +159,6 @@
             $("#video1").html('<div></div>')
             cameraoff();
         });
-        }
     </script>
 </body>
 
