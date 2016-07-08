@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>智能遠控小車</title>
+</head>
+<script src="jquery.min.js"></script>
+<script src="bootstrap.min.js"></script>
+<link rel="stylesheet" href="bootstrap.min.css">
+
+<body>
+
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="well">
+                <div class="row">
+                    <button type="button" class="0 col-xs-4 glyphicon glyphicon-remove-sign btn-danger btn-lg"></button>
+                    <button type="button" class="1 col-xs-4 glyphicon glyphicon-arrow-up btn-success btn-lg"></button>
+                    <button type="button" class="cameraon col-xs-2 glyphicon glyphicon-camera btn-warning btn-lg"></button>
+                    <button type="button" class="cameraoff col-xs-2 glyphicon glyphicon-camera btn-danger btn-lg"></button>
+                </div>
+            </div>
+
+            <div class="well">
+                <div class="row">
+                    <button type="button" class="3 col-xs-4 glyphicon glyphicon-arrow-left btn-info btn-lg"></button>
+                    <button type="button" class="2 col-xs-4 glyphicon glyphicon-arrow-down btn-success btn-lg"></button>
+                    <button type="button" class="4 col-xs-4 glyphicon glyphicon-arrow-right btn-info btn-lg"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="well">
+        <div class="row">
+            <center>
+                <div id="video1"></div>
+            </center>
+        </div>
+    </div>
+
+    <script>
+        function get0()
+        {
+            $.ajax(
+            {
+                url: "control?cmd=stop",
+                success: function(result) {}
+            });
+        };
+
+        function get1()
+        {
+            $.ajax(
+            {
+                url: "control?cmd=forward",
+                success: function(result) {}
+            });
+        };
+
+        function get2()
+        {
+            $.ajax(
+            {
+                url: "control?cmd=back",
+                success: function(result) {}
+            });
+        };
+
+        function get3()
+        {
+            $.ajax(
+            {
+                url: "control?cmd=left",
+                success: function(result) {}
+            });
+        };
+
+        function get4()
+        {
+            $.ajax(
+            {
+                url: "control?cmd=right",
+                success: function(result) {}
+            });
+        };
+
+        function cameraon()
+        {
+            $.ajax(
+            {
+                url: "control?cmd=camera&action=on",
+                success: function(result) {}
+            });
+        };
+
+        function cameraoff()
+        {
+            $.ajax(
+            {
+                url: "control?cmd=camera&action=off",
+                success: function(result) {}
+            });
+        };
+
+
+        $(".0").on('click', (function() {
+            get0();
+        });
+
+        $(".1").on('click', (function() {
+            get1();
+        });
+
+        $(".2").on('click', (function() {
+            get2();
+        });
+
+        $(".3").on('click', (function() {
+            get3();
+        });
+
+        $(".4").on('click', (function() {
+            get4();
+        });
+
+        $(".cameraon").click(function()
+        {
+            $("#video1").html(
+                '<div><ResponsiveEmbed a4by3><img src="http://' +
+                location.hostname +
+                ':46666?action=stream" class="img-responsive"/></ResponsiveEmbed></div>'
+            )
+            cameraon();
+        });
+
+        $(".cameraoff").click(function()
+        {
+            $("#video1").html('<div></div>')
+            cameraoff();
+        });
+        }
+    </script>
+</body>
+
+</html>
