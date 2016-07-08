@@ -9,6 +9,13 @@ var carControl = module.exports = {
     json: httpJson,
 }
 
+var stopTimer;
+var delayTo = 1000; // milllseconds
+
+function carStop() {
+    serialPort.write('st');
+}
+
 /*
  * cmd: car
  *  action: forward, right, left, back, stop
@@ -18,7 +25,7 @@ var carControl = module.exports = {
  *
  * cmd: servo
  *  action: 0, 1
- *  to: 0~180
+ *  to: +, -
  *
  */
 function httpControl(req, res) {
@@ -36,6 +43,10 @@ function httpControl(req, res) {
         case 'car':
             // 'fo', 'ri', 'le', 'ba', 'st'
             serialPort.write(action.substring(0, 2));
+            if(stopTimer) {
+                clearTimeout(stopTimer);
+            }
+            stopTimer = setTimeout(carStop, delayTo);
             break;
         case 'camera':
             switch (action) {
@@ -50,21 +61,17 @@ function httpControl(req, res) {
         case 'servo':
             switch (action) {
                 case '0':
-                    if (parseInt(req.query.to) <= 180) {
-                        serialPort.write("sa" + req.query.to);
-                    }
+                    serialPort.write("sa" + req.query.to);
                     break;
                 case '1':
-                    if (parseInt(req.query.to) <= 180) {
-                        serialPort.write("sb" + req.query.to);
-                    }
+                    serialPort.write("sb" + req.query.to);
                     break;
             }
     }
 
     return res.json({
         status: 'done',
-        messages: 'good'
+        messages: 'done'
     });
 }
 
@@ -92,7 +99,7 @@ function httpJson(req, res) {
 
 function cameraon() {
     var exec = require('child_process').exec;
-    var cmd = exec('mjpg_streamer -i "input_uvc.so -r 1280*960 -d /dev/video0" -o "output_http.so -n"');
+    var cmd = exec('mjpg_streamer -i "input_uvc.so -r 1280*960 -d /dev/video0" -o "output_http.so -n -p 46666"');
 
     cmd.stdout.on('data', function(data) {
         console.log('stdout: ' + data);
