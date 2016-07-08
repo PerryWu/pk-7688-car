@@ -16,6 +16,10 @@ function carStop() {
     serialPort.write('st');
 }
 
+function servoStop() {
+    serialPort.write('ss');
+}
+
 /*
  * cmd: car
  *  action: forward, right, left, back, stop
