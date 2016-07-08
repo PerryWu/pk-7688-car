@@ -1,4 +1,4 @@
-var os = require(os);
+var os = require('os');
 var SerialPort = require("serialport").SerialPort;
 var serialPort = new SerialPort("/dev/ttyS0", {
     baudrate: 57600
@@ -29,7 +29,7 @@ function servoStop() {
  *
  * cmd: servo
  *  action: 0, 1
- *  to: +, -
+ *  to: b, f
  *
  */
 function httpControl(req, res) {
@@ -97,7 +97,7 @@ function httpJson(req, res) {
     }
     return res.json({
         status: 'done',
-        messages: {ip: ip, mac: mac, name: 'car-7688'};
+        messages: {ip: ip, mac: mac, name: 'car-7688'}
     });
 }
 
