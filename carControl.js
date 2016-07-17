@@ -62,7 +62,12 @@ function httpControl(req, res) {
                     cameraon();
                     break;
                 case 'off':
-                    cameraoff(function() {});
+                    cameraoff();
+                    break;
+                case 'restart':
+                    cameraoff(function() {
+                        cameraon();
+                    });
                     break;
             }
             break;
@@ -112,11 +117,11 @@ function httpJson(req, res) {
     });
 }
 
-function cameraon() {
+function cameraon(cb) {
     var exec = require('child_process').exec;
     //var cmd = exec('mjpg_streamer -i "input_uvc.so -r 1280*960 -d /dev/video0" -o "output_http.so -n -p 46666"');
-    var cmd = exec('mjpg_streamer -i "input_uvc.so -r 640*480 -d /dev/video0" -o "output_http.so -n -p 46666"');
-
+    var cmd = exec('mjpg_streamer -b -i "input_uvc.so -r 640*480 -d /dev/video0" -o "output_http.so -n -p 46666"', cb);
+/*
     cmd.stdout.on('data', function(data) {
         console.log('stdout: ' + data);
     });
@@ -126,6 +131,7 @@ function cameraon() {
     cmd.on('close', function(code) {
         console.log('closing code: ' + code);
     });
+*/
 }
 
 function cameraoff(cb) {
