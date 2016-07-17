@@ -11,7 +11,7 @@ var carControl = module.exports = {
 
 var stopTimer;
 var servoStopTimer;
-var delayTo = 500; // milllseconds
+var delayTo = 600; // milllseconds
 
 function carStop() {
     serialPort.write('st');
@@ -52,7 +52,7 @@ function httpControl(req, res) {
                 clearTimeout(stopTimer);
             }
             if(action == 'right' || action == 'left')
-                stopTimer = setTimeout(carStop, delayTo/2);
+                stopTimer = setTimeout(carStop, delayTo/3);
             else
                 stopTimer = setTimeout(carStop, delayTo);
             break;
@@ -62,7 +62,7 @@ function httpControl(req, res) {
                     cameraon();
                     break;
                 case 'off':
-                    cameraoff();
+                    cameraoff(function() {});
                     break;
             }
             break;
@@ -128,19 +128,11 @@ function cameraon() {
     });
 }
 
-function cameraoff() {
+function cameraoff(cb) {
     var exec = require('child_process').exec;
-    var cmd = exec('killall mjpg_streamer');
-
-    cmd.stdout.on('data', function(data) {
-        console.log('stdout: ' + data);
-    });
-    cmd.stderr.on('data', function(data) {
-        console.log('stdout: ' + data);
-    });
-    cmd.on('close', function(code) {
-        console.log('closing code: ' + code);
-    });
+    var cmd = exec('killall mjpg_streamer', cb);
 }
 
-cameraon();
+cameraoff(function() {
+    cameraon();
+});
