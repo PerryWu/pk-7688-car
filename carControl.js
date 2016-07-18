@@ -12,7 +12,7 @@ var carControl = module.exports = {
 var stopTimer;
 var servoStopTimer;
 var delayTo = 600; // milllseconds
-
+var cameraFps = 'auto';
 function carStop() {
     serialPort.write('st');
 }
@@ -59,16 +59,23 @@ function httpControl(req, res) {
         case 'camera':
             switch (action) {
                 case 'on':
-                    cameraon();
+                    cameraon(cameraFps);
                     break;
                 case 'off':
                     cameraoff();
                     break;
                 case 'restart':
                     cameraoff(function() {
-                        cameraon();
+                        cameraon(cameraFps);
                     });
                     break;
+                case 'setfps':
+                    if(!req.query.fps)
+                        break;
+                    cameraoff(function() {
+                        cameraon(req.query.fps);
+                        cameraFps = req.query.fps;
+                    });
             }
             break;
         case 'servo':
@@ -117,10 +124,13 @@ function httpJson(req, res) {
     });
 }
 
-function cameraon(cb) {
+function cameraon(fps, cb) {
     var exec = require('child_process').exec;
     //var cmd = exec('mjpg_streamer -i "input_uvc.so -r 1280*960 -d /dev/video0" -o "output_http.so -n -p 46666"');
-    var cmd = exec('mjpg_streamer -b -i "input_uvc.so -r 640*480 -d /dev/video0" -o "output_http.so -n -p 46666"', cb);
+    var fpsCmd = '';
+    if(fpsCmd != 'auto')
+        fpsCmd = ' -f ' + fps;
+    var cmd = exec('mjpg_streamer -b -i "input_uvc.so -r 640*480 -d /dev/video0 '+fpsCmd+'" -o "output_http.so -n -p 46666"', cb);
 /*
     cmd.stdout.on('data', function(data) {
         console.log('stdout: ' + data);
@@ -140,5 +150,5 @@ function cameraoff(cb) {
 }
 
 cameraoff(function() {
-    cameraon();
+    cameraon(cameraFps);
 });
