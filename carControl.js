@@ -11,7 +11,7 @@ var carControl = module.exports = {
 
 var stopTimer;
 var servoStopTimer;
-var delayTo = 600; // milllseconds
+var delayTo = 500; // milllseconds
 var cameraFps = 'auto';
 function carStop() {
     serialPort.write('st');
@@ -72,6 +72,8 @@ function httpControl(req, res) {
                 case 'setfps':
                     if(!req.query.fps)
                         break;
+                    if(req.query.fps == cameraFps)
+                        break;
                     cameraoff(function() {
                         cameraon(req.query.fps);
                         cameraFps = req.query.fps;
@@ -128,7 +130,7 @@ function cameraon(fps, cb) {
     var exec = require('child_process').exec;
     //var cmd = exec('mjpg_streamer -i "input_uvc.so -r 1280*960 -d /dev/video0" -o "output_http.so -n -p 46666"');
     var fpsCmd = '';
-    if(fpsCmd != 'auto')
+    if(fps != 'auto')
         fpsCmd = ' -f ' + fps;
     var cmd = exec('mjpg_streamer -b -i "input_uvc.so -r 640*480 -d /dev/video0 '+fpsCmd+'" -o "output_http.so -n -p 46666"', cb);
 /*
